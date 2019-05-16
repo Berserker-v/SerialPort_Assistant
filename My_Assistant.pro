@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += serialport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = My_Assistant
@@ -26,10 +26,15 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    qwcomboboxdelegate.cpp \
+    dataframe.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    qwcomboboxdelegate.h \
+    dataframe.h \
+    datatype.h
 
 FORMS += \
         mainwindow.ui
