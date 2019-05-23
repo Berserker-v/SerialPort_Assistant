@@ -27,18 +27,15 @@ DataFrame::DataFrame(QList<int> *list, QList<int> *h_list, QByteArray *h_data):
         case 11: framelength +=4; break;  //full word
         }
     }
-    qDebug() << "数据帧长度: " << framelength;
+
+    /*----------------Printf Information-----------------*/
+    qDebug() << "Frame Length: " << framelength;
+    /*---------------------------------------------------*/
 
     //分离帧头帧尾
     SplitTail();
     headlen = headlist->size();
     taillen = taillist->size();
-//    qDebug() << "帧头位置: " << *headlist;
-//    qDebug() << "帧头数据: " << headdata->at(0) << " " << headdata->at(1);
-//    if(!(taillist->empty())) {
-//        qDebug() << "帧尾位置: " << *taillist;
-//        qDebug() << "帧尾数据: " << taildata->at(0);
-//    }
 }
 
 DataFrame::~DataFrame()
@@ -66,7 +63,7 @@ void DataFrame::SplitTail()
     }
 }
 
-void DataFrame::ReadData(QByteArray *buf)
+void DataFrame::ReadData(const QByteArray *buf)
 {
     uchar data[framelength];
     p_data = new uchar[framelength];
@@ -101,8 +98,6 @@ void DataFrame::ReadData(QByteArray *buf)
             send();
             break;
         }
-
-
     }
 }
 

@@ -17,11 +17,11 @@ private:
 public:
     DataFrame(QList<int> *list, QList<int> *h_list, QByteArray *h_data);
     ~DataFrame();
-    void ReadData(QByteArray * buf);
+    void ReadData(const QByteArray * buf);
 
-    inline int getFrameLen() { return framelength; }
-    inline int getHeadLen()  { return headlist->size(); }
-    inline int getTailLen()  { return taillen; }
+    inline int getFrameLen() const { return framelength; }
+    inline int getHeadLen() const  { return headlist->size(); }
+    inline int getTailLen() const  { return taillen; }
 
 signals:
     void frame_ok(uchar *p_data);

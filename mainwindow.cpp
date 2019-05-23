@@ -1,13 +1,19 @@
+/**
+* @projectName   %{FILENAME}
+* @brief         摘要
+* @author        DY
+* @date          2019-05-18
+*/
 #include <QDate>
 #include <QTableWidgetItem>
 #include <QAbstractItemView>
 #include <QComboBox>
 
-
-
 #include <QTimer>
 #include <QRandomGenerator>
 #include <QtDebug>
+#include <QDir>
+#include <QFileDialog>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -19,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_itemdata(nullptr)
 {
     ui->setupUi(this);
-
     //将 数据类型 设置为ComboBox代理组件
     ui->tableWidget->setItemDelegateForColumn(colType, &comboboxDelegate);
 }
@@ -44,15 +49,6 @@ void MainWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         /*item_flag = true*/
         item_flag = !item_flag;
     }
-//    if( col == 3 && item_flag)
-//    {
-//        //将单元格内数据设置对齐之后，会再次触发信号，所以需要将其屏蔽
-//        /*item_flag = false*/
-//        item_flag = !item_flag;
-//        item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-//        /*item_flag = true*/
-//        item_flag = !item_flag;
-//    }
 }
 
 void MainWindow::on_addRow_clicked()
@@ -67,12 +63,14 @@ void MainWindow::on_insertRow_clicked()
     int curRow = ui->tableWidget->currentRow();
     ui->tableWidget->insertRow(curRow);
     createItemARow(curRow);
+    number_refresh();
 }
 
 void MainWindow::on_insertHead_clicked()
 {
     ui->tableWidget->insertRow(0);
     createItemARow(0, true);
+    number_refresh();
 }
 
 void MainWindow::on_insertTail_clicked()
@@ -91,9 +89,10 @@ void MainWindow::createItemARow(int row, bool check_item )
     str.setNum(row+1);
     item = new QTableWidgetItem(str, MainWindow::ctCount);
     item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    item->setFlags(item->flags()|Qt::ItemIsEditable);
     ui->tableWidget->setItem(row, MainWindow::colCount, item);
     //数据名称
-    str.prepend("数据");
+    str="<键入名称>";
     item = new QTableWidgetItem(str, MainWindow::ctName);
     item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     if(check_item)
@@ -108,11 +107,19 @@ void MainWindow::createItemARow(int row, bool check_item )
     ui->tableWidget->setItem(row, MainWindow::colType, item);
     //数值
     str.setNum(0);
-//    item = new QTableWidgetItem(str, MainWindow::ctData);
-    item = new QTableWidgetItem(str);
+    item = new QTableWidgetItem(str, MainWindow::ctData);
     item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     item->setFlags(item->flags()|Qt::ItemIsEditable);
     ui->tableWidget->setItem(row, MainWindow::colData, item);
+}
+
+void MainWindow::number_refresh()
+{
+    int row_total = ui->tableWidget->rowCount();
+    for (int i = 0; i < row_total; ++i) {
+        QString str = QString::number(i+1);
+        ui->tableWidget->item(i,colCount)->setText(str);
+    }
 }
 
 void MainWindow::on_delRow_clicked()
@@ -137,7 +144,9 @@ void MainWindow::on_Complete_bt_clicked()
         ui->addRow->setEnabled(false);
         ui->insertRow->setEnabled(false);
         ui->insertHead->setEnabled(false);
+        ui->insertTail->setEnabled(false);
         ui->delRow->setEnabled(false);
+        ui->delAll->setEnabled(false);
 
         //使能 打开串口按钮
         ui->port_btn->setEnabled(true);
@@ -145,9 +154,10 @@ void MainWindow::on_Complete_bt_clicked()
         //储存数据帧数据类型及帧头帧尾位置
         restoreType();
 
-        qDebug() << "数据帧帧头帧尾位置: " << *m_headlist ;
-
         m_dataframe = new DataFrame(m_typelist, m_headlist, m_headdata);
+
+        //数据帧长度更新
+        framelen_update();
 
         //接收数据帧完整信号
         connect(m_dataframe,     &DataFrame::frame_ok,
@@ -158,6 +168,11 @@ void MainWindow::on_Complete_bt_clicked()
             item = ui->tableWidget->item(i,colType);
             item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         }
+
+        /*----------------Printf Information-----------------*/
+        qDebug() << "Comfirm Frame";
+        qDebug() << "Position of Head and Tail: " << *m_headlist;
+        /*---------------------------------------------------*/
     }
     else {
         ui->Complete_bt->setText(tr("确认数据帧"));
@@ -168,18 +183,35 @@ void MainWindow::on_Complete_bt_clicked()
         ui->addRow->setEnabled(true);
         ui->insertRow->setEnabled(true);
         ui->insertHead->setEnabled(true);
+        ui->insertTail->setEnabled(true);
         ui->delRow->setEnabled(true);
+        ui->delAll->setEnabled(true);
+
+        /*----------------Printf Information-----------------*/
+        if(m_typelist==nullptr || m_headlist==nullptr || m_dataframe==nullptr) {
+            qWarning()<< "Delete Error!";
+        }
+        qDebug() << "Free Memory...type.head.dataframe";
+        /*---------------------------------------------------*/
 
         //清楚数据类型列表
         delete m_typelist;
         delete m_headlist;
         delete m_dataframe;
 
+        /*----------------Printf Information-----------------*/
+        qDebug() << "Free Memory Successfully";
+        /*---------------------------------------------------*/
+
         //使表格数据类型栏可以编辑
         for (int i = 0; i < rowtotal; ++i) {
             item = ui->tableWidget->item(i,colType);
             item->setFlags(item->flags() | Qt::ItemIsEditable);
         }
+
+        /*----------------Printf Information-----------------*/
+        qDebug() << "Edit Frame";
+        /*---------------------------------------------------*/
     }
 }
 
@@ -206,12 +238,9 @@ void MainWindow::restoreType()
            m_headdata->append(static_cast<char>(ui->tableWidget->item(i, colData)->text().toInt(&ok,16)));
        }
     }
-/*----------------------测试--------------------------*/
-    qDebug() << m_headdata->toHex();
-/*---------------------------------------------------*/
 }
 
-void MainWindow::recognizeType(QString *str)
+void MainWindow::recognizeType(const QString *str)
 {
     if (*str == "uchar") {
         m_typelist->append(DataType::uchartype);
@@ -263,8 +292,10 @@ void MainWindow::table_update(uchar *p_data)
          ++i) {
         data_update(m_typelist->at(i), i);
     }
-
+    m_framecnt++;
+    ui->acceptnum_lb->setNum(m_framecnt);
     m_itemdata = p_temp;
+
 }
 
 void MainWindow::data_update(int type, int row)
@@ -324,6 +355,11 @@ void MainWindow::data_update(int type, int row)
     }
 }
 
+void MainWindow::framelen_update()
+{
+    ui->lennum_lb->setNum(m_dataframe->getFrameLen());
+}
+
 void MainWindow::on_delAll_clicked()
 {
     int rowtotal = ui->tableWidget->rowCount();
@@ -348,7 +384,13 @@ void MainWindow::on_port_btn_clicked()
         qDebug() << m_serial->readBufferSize();
         //连接信号槽
         QObject::connect(m_serial,  &QSerialPort::readyRead,
-                         this,      &MainWindow::read_portdata);
+                         this,      &MainWindow::wait_read);
+        //串口接收帧计数清零
+        framecnt_zero();
+
+        /*----------------Printf Information-----------------*/
+        qDebug() << "Serial Port Open.";
+        /*---------------------------------------------------*/
     }
     else {
         //关闭串口
@@ -357,7 +399,13 @@ void MainWindow::on_port_btn_clicked()
         m_serial->deleteLater();
         if( m_itemdata != nullptr)
         {
+            /*----------------Delete Information-----------------*/
+            qDebug() << "Free Memory...m_itemdata...";
+            /*---------------------------------------------------*/
             delete m_itemdata;
+            /*---------------------------------------------------*/
+            qDebug() << "Free Successfully!";
+            /*---------------------------------------------------*/
         }
 
         //开启菜单
@@ -367,6 +415,10 @@ void MainWindow::on_port_btn_clicked()
         ui->data_box->setEnabled(true);
         ui->parity_box->setEnabled(true);
         ui->stop_box->setEnabled(true);
+
+        /*----------------Printf Information-----------------*/
+        qDebug() << "Serial Port Close.";
+        /*---------------------------------------------------*/
     }
 }
 
@@ -422,7 +474,16 @@ void MainWindow::setSerialPort()
     m_serial->setFlowControl(QSerialPort::NoFlowControl);
 
     //设置串口接收缓冲区数据长度
-    m_serial->setReadBufferSize(2*(m_dataframe->getFrameLen()));
+    m_serial->setReadBufferSize(5*(m_dataframe->getFrameLen()));
+
+    /*----------------Printf Information-----------------*/
+    qDebug() << "Serial Port Buffersize:" << m_serial->readBufferSize();
+    /*---------------------------------------------------*/
+}
+
+void MainWindow::wait_read()
+{
+    QTimer::singleShot(5, this, &MainWindow::read_portdata);
 }
 
 void MainWindow::read_portdata()
@@ -430,14 +491,155 @@ void MainWindow::read_portdata()
     QByteArray buf;
     buf = m_serial->readAll();
 
-/*----------------------测试--------------------------*/
-    qDebug() << buf.toHex();
-/*---------------------------------------------------*/
+    /*----------------Printf Information-----------------*/
+    qDebug() << "buf.toHex()";
+    /*---------------------------------------------------*/
     m_dataframe->ReadData(&buf);
 }
 
+void MainWindow::framecnt_zero()
+{
+    m_framecnt = 0;
+}
+
+void MainWindow::on_save_bt_clicked()
+{
+    DataFile File_save;
+    //新建Save文件夹
+    QString curPath = QDir::currentPath();
+    curPath += "/debug";
+    QDir dir(curPath);
+    QString savePath = curPath+ "/save";
+    if(!dir.exists(savePath))  {
+        dir.mkdir("Save");
+    }
+    //新建数据帧文件
+    curPath = savePath;
+    QString dlgTitle = tr("另存为");
+    QString filter = "文本文件(*.txt);;所有文件(*.)";
+    QString save_Filename = QFileDialog::getSaveFileName(this,dlgTitle,curPath,filter);
+
+    if (save_Filename.isEmpty())
+        return ;
+
+    File_save.saveFrame(save_Filename);
+    //保存数据帧
+    saveFrame(File_save);
+
+    File_save.closeFile();
+
+    /*----------------Printf Information-----------------*/
+    qDebug() << "Save Successfully!";
+    /*---------------------------------------------------*/
+
+}
+
+void MainWindow::saveFrame(DataFile &datafile)
+{
+    QStringList strlist;
+    QTableWidgetItem *item;
+    for (int i = 0; i < ui->tableWidget->rowCount(); ++i) {
+        item = ui->tableWidget->item(i,colName);
+        strlist << item->text()
+                << ui->tableWidget->item(i,colType)->text();
+        //判断是否为帧头
+        if(item->checkState() == Qt::Checked) {
+            strlist << ui->tableWidget->item(i,colData)->text() <<"Yes";
+        }
+        //保存至文件
+        datafile.saveFrame(strlist);
+        strlist.clear();
+    }
+}
+
+void MainWindow::on_load_bt_clicked()
+{
+    QString curPath = QDir::currentPath();
+    curPath += "/debug";
+    QDir dir(curPath);
+    QString savePath = curPath+ "/save";
+    if(dir.exists(savePath))  {
+        curPath = savePath;
+    }
+    //Dialog配置
+    QString dlgTitle = tr("加载配置文件");
+    QString filter = "文本文件(*.txt);;所有文件(*.)";
+    QString load_Filename = QFileDialog::getOpenFileName(this,dlgTitle,curPath,filter);
+
+    if (load_Filename.isEmpty())
+        return ;
+
+    QFile file_Load(load_Filename);
+    //判断文件是否打开
+    if(!file_Load.open(QIODevice::ReadOnly|QIODevice::Text))  {
+        /*----------------Printf Information-----------------*/
+        qWarning() << "Load File Failed!";
+        /*---------------------------------------------------*/
+        return;
+    }    
+    QTextStream load_stream(&file_Load);
+//    load_stream.setAutoDetectUnicode(true);
+    //清楚表格
+    on_delAll_clicked();
+    //添加表格项
+    int curRow = 0;
+    while(!load_stream.atEnd())  {
+        loadFrame(curRow, load_stream.readLine());
+        ++curRow;
+    }
+    file_Load.close();
+    /*----------------Printf Information-----------------*/
+    qDebug() << "Load Successfully!";
+    /*---------------------------------------------------*/
+}
+
+void MainWindow::loadFrame(int row, QString datastr)
+{
+    QStringList strlist = datastr.split(",");
+    ui->tableWidget->insertRow(row);
+    if (strlist.size() == 2)  {
+        createItemARow(row,strlist.at(0),strlist.at(1));
+    }
+    else if (strlist.size() == 4)  {
+        createItemARow(row,strlist.at(0),strlist.at(1),true,strlist.at(2));
+    }
+}
+
+void MainWindow::createItemARow(int row, QString name, QString type, bool check_item, QString data)
+{
+    QTableWidgetItem *item;
+    QString str;
+    //为 新加行 设置item
+    //序号
+    str.setNum(row+1);
+    item = new QTableWidgetItem(str, MainWindow::ctCount);
+    item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    item->setFlags(item->flags()|Qt::ItemIsEditable);
+    ui->tableWidget->setItem(row, MainWindow::colCount, item);
+    //数据名称
+    item = new QTableWidgetItem(name, MainWindow::ctName);
+    item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    if(check_item)
+    {
+        //判断是否插入帧头
+        item->setCheckState(Qt::Checked);
+    }
+    ui->tableWidget->setItem(row, MainWindow::colName, item);
+    //数据类型
+    item = new QTableWidgetItem(type, MainWindow::ctType);
+    item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    ui->tableWidget->setItem(row, MainWindow::colType, item);
+    //数值
+    if(check_item)  {
+        item = new QTableWidgetItem(data, MainWindow::ctData);
+        item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        item->setFlags(item->flags()|Qt::ItemIsEditable);
+        ui->tableWidget->setItem(row, MainWindow::colData, item);
+    }
+}
+
 //字节转各数据类型
-ushort MainWindow::ByteToUnShort(uchar *pByte)
+ushort MainWindow::ByteToUnShort(uchar *pByte) const
 {
     ByteAndShort data;
     data.byte[0] = *pByte;
@@ -446,7 +648,7 @@ ushort MainWindow::ByteToUnShort(uchar *pByte)
     return data.ushort16;
 }
 
-qint16 MainWindow::ByteToShort(uchar *pByte)
+qint16 MainWindow::ByteToShort(uchar *pByte) const
 {
     ByteAndShort data;
     data.byte[0] = *pByte;
@@ -455,7 +657,7 @@ qint16 MainWindow::ByteToShort(uchar *pByte)
     return data.short16;
 }
 
-uint MainWindow::ByteToUnInt(uchar *pByte)
+uint MainWindow::ByteToUnInt(uchar *pByte) const
 {
     ByteAndInt data;
     for (int i=0; i<4; ++i) {
@@ -465,7 +667,7 @@ uint MainWindow::ByteToUnInt(uchar *pByte)
     return data.uint32;
 }
 
-qint32 MainWindow::ByteToInt(uchar *pByte)
+qint32 MainWindow::ByteToInt(uchar *pByte) const
 {
     ByteAndInt data;
     for (int i=0; i<4; ++i) {
@@ -475,7 +677,7 @@ qint32 MainWindow::ByteToInt(uchar *pByte)
     return data.int32;
 }
 
-float MainWindow::ByteToFloat(uchar *pByte)
+float MainWindow::ByteToFloat(uchar *pByte) const
 {
     ByteAndFloat data;
     for (int i=0; i<4; ++i) {
@@ -485,7 +687,7 @@ float MainWindow::ByteToFloat(uchar *pByte)
     return data.float32;
 }
 
-qreal MainWindow::ByteToDouble(uchar *pByte)
+qreal MainWindow::ByteToDouble(uchar *pByte) const
 {
     ByteAndDouble data;
     for (int i=0; i<8; ++i) {
@@ -495,7 +697,7 @@ qreal MainWindow::ByteToDouble(uchar *pByte)
     return data.double64;
 }
 
-unsigned long MainWindow::ByteToUnLong(uchar *pByte)
+unsigned long MainWindow::ByteToUnLong(uchar *pByte) const
 {
     ByteAndLong data;
     for (int i=0; i<4; ++i) {
@@ -505,7 +707,7 @@ unsigned long MainWindow::ByteToUnLong(uchar *pByte)
     return data.ulong32;
 }
 
-long MainWindow::ByteToLong(uchar *pByte)
+long MainWindow::ByteToLong(uchar *pByte)  const
 {
     ByteAndLong data;
     for (int i=0; i<4; ++i) {
@@ -514,6 +716,18 @@ long MainWindow::ByteToLong(uchar *pByte)
     }
     return data.long32;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

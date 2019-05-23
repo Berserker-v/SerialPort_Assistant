@@ -28,13 +28,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     qwcomboboxdelegate.cpp \
-    dataframe.cpp
+    dataframe.cpp \
+    datafile.cpp
 
 HEADERS += \
         mainwindow.h \
     qwcomboboxdelegate.h \
     dataframe.h \
-    datatype.h
+    datatype.h \
+    datafile.h
 
 FORMS += \
         mainwindow.ui
