@@ -13,7 +13,7 @@ public:
     explicit DataFile(QObject *parent = nullptr);
     ~DataFile();
 
-    bool saveFrame(const QString &FileName);
+    bool saveFile(const QString &FileName);
     bool saveFrame(QStringList &FileData);
     inline void closeFile()  { m_File->close(); }
 

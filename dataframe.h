@@ -15,12 +15,15 @@ private:
     void send();
 
 public:
-    DataFrame(QList<int> *list, QList<int> *h_list, QByteArray *h_data);
+    explicit DataFrame();
     ~DataFrame();
+
+    void setFrame(QList<int> &list, QList<int> &h_list, QByteArray &h_data);
     void ReadData(const QByteArray * buf);
+    void clear();
 
     inline int getFrameLen() const { return framelength; }
-    inline int getHeadLen() const  { return headlist->size(); }
+    inline int getHeadLen() const  { return headlist.size(); }
     inline int getTailLen() const  { return taillen; }
 
 signals:
@@ -32,11 +35,11 @@ private:
     int headlen;
     int taillen;
     uchar *p_data;
-    QList<int> *framelist;
-    QList<int> *headlist;
-    QList<int> *taillist;
-    QByteArray *headdata;
-    QByteArray *taildata;
+    QList<int> framelist;
+    QList<int> headlist;
+    QList<int> taillist;
+    QByteArray headdata;
+    QByteArray taildata;
 };
 
 #endif // DATAFRAME_H

@@ -11,18 +11,16 @@ DataFile::DataFile(QObject *parent) : QObject(parent),
 
 DataFile::~DataFile()
 {
-    if (m_File != nullptr)  {
-        /*----------------Delete Information-----------------*/
-        qDebug() << "Free Memory...file";
-        /*---------------------------------------------------*/
-        delete m_File;
-        /*---------------------------------------------------*/
-        qDebug() << "Free Successfully!";
-        /*---------------------------------------------------*/
-    }
+    /*----------------Delete Information-----------------*/
+    qDebug() << "Free Memory...file";
+    /*---------------------------------------------------*/
+    delete m_File;  m_File=nullptr;
+    /*---------------------------------------------------*/
+    qDebug() << "Free Successfully!";
+    /*---------------------------------------------------*/
 }
 
-bool DataFile::saveFrame(const QString &FileName)
+bool DataFile::saveFile(const QString &FileName)
 {
     m_File = new QFile(FileName);
     if(!m_File->open(QIODevice::WriteOnly|QIODevice::Text))

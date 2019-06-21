@@ -6,6 +6,7 @@
 #include <QTableWidgetItem>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+#include <QTimer>
 
 #include <QByteArray>
 
@@ -47,6 +48,14 @@ private:
     void saveFrame(DataFile &datafile);
     //加载数据帧配置
     void loadFrame(int row, QString datastr);
+    //检查Save文件夹
+    QString check_SaveFloder();
+    //保存程序关闭时数据帧配置
+    void lastFrame();
+    //获取表格刷新时间
+    uint getRefreshTime(int index);
+    //设置表格刷新频率
+    void setRefreahTime(uint msec);
 
 
     //将接收字节转换成为各类型变量
@@ -76,29 +85,34 @@ private slots:
     void on_save_bt_clicked();
     void on_load_bt_clicked();
 
-    void table_update(uchar *p_data);
+    void receive_frame(uchar *p_data);
+    void table_update();
     void wait_read();
     void read_portdata();
 
-
+    void on_refresh_box_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
-    DataFrame *m_dataframe;
+    DataFrame m_dataframe;
     DataFile  *m_datafile;
     //自定义代理
     QWComboBoxDelegate comboboxDelegate;
     //数据类型列表
-    QList<int> *m_typelist;
+    QList<int> m_typelist;
     //帧头/帧尾位置列表
-    QList<int> *m_headlist;
+    QList<int> m_headlist;
     //帧头/帧尾数据
-    QByteArray *m_headdata;
+    QByteArray m_headdata;
     //添加串口类
     QSerialPort *m_serial;
+    //表格刷新定时器
+    QTimer m_Refresh_Timer;
 
     uchar *m_itemdata;
     int m_framecnt;
+    uint m_refresh_time;
+    bool wait_flag;
 };
 
 #endif // MAINWINDOW_H

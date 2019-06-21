@@ -3,14 +3,19 @@
 #include "dataframe.h"
 #include "cstring"
 
-DataFrame::DataFrame(QList<int> *list, QList<int> *h_list, QByteArray *h_data):
-    framelength(0),
-    datacnt(0),
-    framelist(list),
-    headlist(h_list),
-    headdata(h_data)
+DataFrame::DataFrame()
 {
-    QListIterator<int> frame(*list);
+
+}
+
+void DataFrame::setFrame(QList<int> &list, QList<int> &h_list, QByteArray &h_data)
+{
+    framelength = 0;
+    datacnt = 0;
+    framelist = list;
+    headlist = h_list;
+    headdata = h_data;
+    QListIterator<int> frame(list);
     while (frame.hasNext()) {
         switch (frame.next()) {
         case 0: framelength++; break;     //unsigned char
@@ -27,37 +32,24 @@ DataFrame::DataFrame(QList<int> *list, QList<int> *h_list, QByteArray *h_data):
         case 11: framelength +=4; break;  //full word
         }
     }
-
-    /*----------------Printf Information-----------------*/
-    qDebug() << "Frame Length: " << framelength;
-    /*---------------------------------------------------*/
-
-    //分离帧头帧尾
-    SplitTail();
-    headlen = headlist->size();
-    taillen = taillist->size();
 }
+
 
 DataFrame::~DataFrame()
 {
-    delete taillist;
-    delete taildata;
-//    delete p_data;
 }
 
 void DataFrame::SplitTail()
 {
-    taillist = new QList<int>;
-    taildata = new QByteArray;
-    for (int i=0; i<headlist->size()-1; ++i) {
+    for (int i=0; i<headlist.size()-1; ++i) {
         //假如帧头列表不连续则视为帧尾
-        if (headlist->at(i+1) > (headlist->at(i)+1)) {
+        if (headlist.at(i+1) > (headlist.at(i)+1)) {
             //移除headlist/headdata中帧尾列表和数据
-            for (int j=headlist->size()-1; j>i; --j) {
-                taillist->prepend(headlist->takeAt(j));
-                taildata->append(headdata->at(j));
+            for (int j=headlist.size()-1; j>i; --j) {
+                taillist.prepend(headlist.takeAt(j));
+                taildata.append(headdata.at(j));
             }
-            headdata->remove(i+1,taillist->size());
+            headdata.remove(i+1,taillist.size());
             break;
         }
     }
@@ -65,14 +57,20 @@ void DataFrame::SplitTail()
 
 void DataFrame::ReadData(const QByteArray *buf)
 {
-    uchar data[framelength];
-    p_data = new uchar[framelength];
+    if (!datacnt)  {
+        p_data = new uchar[framelength];
+    }
+
+//    for (char i : *buf)  {
+//        *(p_data+datacnt) = static_cast<uchar>(i);
+//    }
+
     for (int i=0; i<buf->size(); ++i) {
-        data[datacnt] = static_cast<uchar>(buf->at(i));
+        *(p_data+datacnt)= static_cast<uchar>(buf->at(i));
 
         //判断帧头
-        if(datacnt < headlen) {
-            if (data[datacnt] == static_cast<uchar>(headdata->at(datacnt)))  {
+        if (datacnt < headlen)  {
+            if (*(p_data+datacnt) == static_cast<uchar>(headdata.at(datacnt)))  {
                 ++datacnt;
             }
             else {
@@ -83,17 +81,15 @@ void DataFrame::ReadData(const QByteArray *buf)
 
         //判断帧尾
         if(datacnt>(framelength-taillen-1)) {
-            if (data[datacnt] != static_cast<uchar>(taildata->at(taillen-(framelength-datacnt)))) {
+            if (*(p_data+datacnt) != static_cast<uchar>(taildata.at(taillen-(framelength-datacnt)))) {
                 datacnt = 0;
                 continue;
             }
         }
-
         ++datacnt;
 
         //数据帧接收完整发出信号
         if(datacnt == framelength) {
-            memcpy(p_data, data, framelength);
             datacnt = 0;
             send();
             break;
@@ -106,6 +102,14 @@ void DataFrame::send()
     emit frame_ok(p_data);
 }
 
+void DataFrame::clear()
+{
+    framelist.clear();
+    headlist.clear();
+    taillist.clear();
+    headdata.clear();
+    taildata.clear();
+}
 
 
 

@@ -18,14 +18,14 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>190</width>
+        <width>220</width>
         <height>200</height>
        </size>
       </property>
@@ -41,7 +41,7 @@ QTabBar::tab{height:30}
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -71,23 +71,10 @@ QTabBar::tab{height:30}
        <attribute name="title">
         <string>串口设置</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
+       <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,1,0,0">
         <property name="leftMargin">
          <number>9</number>
         </property>
-        <item row="1" column="0">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>179</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="0" column="0">
          <widget class="QFrame" name="frame_9">
           <property name="font">
@@ -129,7 +116,7 @@ QTabBar::tab{height:30}
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>4</number>
+              <number>5</number>
              </property>
              <item>
               <property name="text">
@@ -227,10 +214,10 @@ QTabBar::tab{height:30}
               </sizepolicy>
              </property>
              <property name="currentText">
-              <string>115200</string>
+              <string>460800</string>
              </property>
              <property name="currentIndex">
-              <number>6</number>
+              <number>7</number>
              </property>
              <item>
               <property name="text">
@@ -417,6 +404,59 @@ QTabBar::tab{height:30}
           </layout>
          </widget>
         </item>
+        <item row="3" column="0">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>179</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="0">
+         <widget class="QFrame" name="frame_8">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <widget class="QCheckBox" name="save_check">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>73</width>
+             <height>18</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>保存数据</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+           <property name="tristate">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="table_tab">
@@ -502,6 +542,14 @@ QTabBar::tab{height:30}
                 <property name="cursor">
                  <cursorShape>ArrowCursor</cursorShape>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
+                </property>
                 <property name="text">
                  <string>添加行</string>
                 </property>
@@ -516,7 +564,12 @@ QTabBar::tab{height:30}
                  </sizepolicy>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
                 </property>
                 <property name="text">
                  <string>插入行</string>
@@ -531,6 +584,14 @@ QTabBar::tab{height:30}
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
+                </property>
                 <property name="text">
                  <string>插入帧头</string>
                 </property>
@@ -543,6 +604,14 @@ QTabBar::tab{height:30}
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
                 </property>
                 <property name="text">
                  <string>插入帧尾</string>
@@ -562,8 +631,18 @@ QTabBar::tab{height:30}
              </property>
              <property name="font">
               <font>
+               <family>宋体</family>
                <pointsize>10</pointsize>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}
+</string>
              </property>
              <property name="text">
               <string>删除当前行</string>
@@ -578,6 +657,14 @@ QTabBar::tab{height:30}
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="styleSheet">
+              <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
+             </property>
              <property name="text">
               <string>清空数据帧</string>
              </property>
@@ -590,6 +677,14 @@ QTabBar::tab{height:30}
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
              </property>
              <property name="text">
               <string>确认数据帧</string>
@@ -605,7 +700,12 @@ QTabBar::tab{height:30}
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true"/>
+              <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
              </property>
              <property name="text">
               <string>保存数据帧</string>
@@ -621,7 +721,12 @@ QTabBar::tab{height:30}
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true"/>
+              <string notr="true">QToolButton{
+border: 1px solid #8f8f91;
+background-color:qlineargradient(x1:0,y1:0,x2:0,y2:1,
+stop:0 #f6f7fa, stop:1 #dadbde);
+min-width:80px;
+}</string>
              </property>
              <property name="text">
               <string>加载数据帧</string>
@@ -826,6 +931,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
           <property name="flags">
            <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
           </property>
@@ -836,6 +950,15 @@ QTabBar::tab{height:30}
           </property>
           <property name="textAlignment">
            <set>AlignCenter</set>
+          </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
           </property>
           <property name="checkState">
            <enum>Checked</enum>
@@ -848,6 +971,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="0" column="3">
           <property name="text">
@@ -856,6 +988,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="1" column="0">
           <property name="text">
@@ -863,6 +1004,15 @@ QTabBar::tab{height:30}
           </property>
           <property name="textAlignment">
            <set>AlignCenter</set>
+          </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
           </property>
           <property name="flags">
            <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -875,6 +1025,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
           <property name="checkState">
            <enum>Checked</enum>
           </property>
@@ -886,6 +1045,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="1" column="3">
           <property name="text">
@@ -894,6 +1062,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="2" column="0">
           <property name="text">
@@ -901,6 +1078,15 @@ QTabBar::tab{height:30}
           </property>
           <property name="textAlignment">
            <set>AlignCenter</set>
+          </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
           </property>
           <property name="flags">
            <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -913,6 +1099,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
           <property name="checkState">
            <enum>Checked</enum>
           </property>
@@ -924,6 +1119,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="2" column="3">
           <property name="text">
@@ -932,6 +1136,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="3" column="0">
           <property name="text">
@@ -939,6 +1152,15 @@ QTabBar::tab{height:30}
           </property>
           <property name="textAlignment">
            <set>AlignCenter</set>
+          </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
           </property>
           <property name="flags">
            <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -951,6 +1173,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
           <property name="checkState">
            <enum>Checked</enum>
           </property>
@@ -962,6 +1193,15 @@ QTabBar::tab{height:30}
           <property name="textAlignment">
            <set>AlignCenter</set>
           </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
+          </property>
          </item>
          <item row="3" column="3">
           <property name="text">
@@ -969,6 +1209,15 @@ QTabBar::tab{height:30}
           </property>
           <property name="textAlignment">
            <set>AlignCenter</set>
+          </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>227</red>
+             <green>227</green>
+             <blue>227</blue>
+            </color>
+           </brush>
           </property>
           <property name="flags">
            <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -1169,10 +1418,22 @@ QTabBar::tab{height:30}
        <item row="1" column="0">
         <widget class="QFrame" name="frame_4">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
          </property>
          <property name="frameShape">
           <enum>QFrame::Box</enum>
@@ -1180,13 +1441,101 @@ QTabBar::tab{height:30}
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,2,2">
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1,2,2">
           <property name="topMargin">
            <number>1</number>
           </property>
           <property name="bottomMargin">
            <number>1</number>
           </property>
+          <item>
+           <widget class="QFrame" name="frame_7">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="refresh_label">
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>刷新率:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="refresh_box">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <item>
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1Hz</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2Hz</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5Hz</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>10Hz</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item>
            <spacer name="horizontalSpacer_3">
             <property name="orientation">
@@ -1209,11 +1558,22 @@ QTabBar::tab{height:30}
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="leftMargin">
+              <number>9</number>
+             </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
+              <number>3</number>
+             </property>
              <item>
               <widget class="QLabel" name="len_lb">
                <property name="font">
                 <font>
                  <pointsize>10</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -1225,7 +1585,7 @@ QTabBar::tab{height:30}
               <widget class="QLabel" name="lennum_lb">
                <property name="font">
                 <font>
-                 <pointsize>10</pointsize>
+                 <pointsize>11</pointsize>
                 </font>
                </property>
                <property name="text">
@@ -1254,11 +1614,19 @@ QTabBar::tab{height:30}
              <property name="spacing">
               <number>0</number>
              </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
+              <number>3</number>
+             </property>
              <item>
               <widget class="QLabel" name="accept_lb">
                <property name="font">
                 <font>
                  <pointsize>10</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -1273,7 +1641,7 @@ QTabBar::tab{height:30}
               <widget class="QLabel" name="acceptnum_lb">
                <property name="font">
                 <font>
-                 <pointsize>10</pointsize>
+                 <pointsize>11</pointsize>
                 </font>
                </property>
                <property name="text">
